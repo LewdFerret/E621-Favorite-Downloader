@@ -1,0 +1,67 @@
+[gd_scene load_steps=4 format=3 uid="uid://d323hfn8372y5"]
+
+[ext_resource type="Script" path="res://Scripts/LoadingPopup.gd" id="1_6yy7b"]
+[ext_resource type="Script" path="res://Scripts/Pivot.gd" id="1_k51k8"]
+[ext_resource type="Texture2D" uid="uid://8mcr3doel7l1" path="res://icons/loading.png" id="2_smygb"]
+
+[node name="LoadingPopup" type="Window"]
+title = "Loading"
+position = Vector2i(0, 36)
+size = Vector2i(500, 170)
+visible = false
+transient = true
+popup_window = true
+script = ExtResource("1_6yy7b")
+
+[node name="RichTextLabel" type="RichTextLabel" parent="."]
+offset_left = 200.0
+offset_top = 35.84
+offset_right = 700.0
+offset_bottom = 125.84
+size_flags_horizontal = 8
+size_flags_vertical = 4
+bbcode_enabled = true
+text = "[font_size=32]Downloading...
+File X/Y[/font_size]"
+fit_content = true
+
+[node name="Pivot" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 68.945
+offset_top = 66.815
+offset_right = 68.945
+offset_bottom = 106.815
+grow_vertical = 2
+rotation = 10528.7
+script = ExtResource("1_k51k8")
+
+[node name="TextureRect" type="TextureRect" parent="Pivot"]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_top = -20.0
+offset_bottom = -20.0
+grow_vertical = 2
+scale = Vector2(0.16, 0.16)
+texture = ExtResource("2_smygb")
+expand_mode = 1
+stretch_mode = 3
+
+[node name="CancelButton" type="Button" parent="."]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -18.0
+offset_top = -18.0
+offset_right = -10.0
+offset_bottom = -10.0
+grow_horizontal = 0
+grow_vertical = 0
+text = "Cancel"
+
+[connection signal="close_requested" from="." to="." method="_on_close_requested"]
+[connection signal="pressed" from="CancelButton" to="." method="_on_cancel_button_pressed"]

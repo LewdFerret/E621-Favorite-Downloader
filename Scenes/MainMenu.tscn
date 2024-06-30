@@ -1,0 +1,182 @@
+[gd_scene load_steps=6 format=3 uid="uid://d8k5qge6h7lm"]
+
+[ext_resource type="Script" path="res://Scripts/MainMenu.gd" id="1_cm0cc"]
+[ext_resource type="Texture2D" uid="uid://bvweyc5dtpnsl" path="res://icons/github/github-mark-white.svg" id="2_24sm1"]
+[ext_resource type="PackedScene" uid="uid://d323hfn8372y5" path="res://Scenes/LoadingPopup.tscn" id="2_o4pna"]
+[ext_resource type="Texture2D" uid="uid://dh8m0rirvy4xs" path="res://icons/e621.png" id="3_ulxvo"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_8tr7q"]
+font_color = Color(0.637843, 0.637843, 0.637843, 1)
+
+[node name="MainMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_cm0cc")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Panel"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -288.0
+offset_top = 20.0
+offset_right = 288.0
+offset_bottom = 69.0
+grow_horizontal = 2
+bbcode_enabled = true
+text = "[center][font_size=32][url=https://e621.net/]E621[/url] [color=green]Favorites Downloader[/color][/font_size][/center]"
+scroll_active = false
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -176.0
+offset_top = -105.5
+offset_right = 176.0
+offset_bottom = 105.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 5
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Panel/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Label" type="Label" parent="Panel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Username"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="usernameEntry" type="LineEdit" parent="Panel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+placeholder_text = "CoolUser123"
+expand_to_text_length = true
+clear_button_enabled = true
+select_all_on_focus = true
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="Panel/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Label" type="Label" parent="Panel/VBoxContainer/HBoxContainer4"]
+layout_mode = 2
+text = "Your API Key"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="apiKeyEntry" type="LineEdit" parent="Panel/VBoxContainer/HBoxContainer4"]
+layout_mode = 2
+tooltip_text = "Placeholder is not a real API Key lmao"
+placeholder_text = "1nHrmzmsvJf26EhU1F7CjnjC"
+expand_to_text_length = true
+clear_button_enabled = true
+select_all_on_focus = true
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Panel/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Label" type="Label" parent="Panel/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+text = "Save Path"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="pathEntry" type="LineEdit" parent="Panel/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+editable = false
+expand_to_text_length = true
+clear_button_enabled = true
+select_all_on_focus = true
+
+[node name="BrowseButton" type="Button" parent="Panel/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+text = "Browse"
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="Panel/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Label" type="Label" parent="Panel/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+text = "Start at index"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="startAtIndexSpinBox" type="SpinBox" parent="Panel/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+max_value = 300.0
+
+[node name="rememberInputCheckbox" type="CheckBox" parent="Panel/VBoxContainer"]
+layout_mode = 2
+text = "Remember Inputs"
+alignment = 1
+
+[node name="SubmitButton" type="Button" parent="Panel/VBoxContainer"]
+layout_mode = 2
+text = "Try Download"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -50.0
+offset_top = -50.0
+offset_right = -10.0
+offset_bottom = -10.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_constants/separation = 5
+
+[node name="Label" type="Label" parent="Panel/HBoxContainer"]
+layout_mode = 2
+text = "By LewdFerret"
+label_settings = SubResource("LabelSettings_8tr7q")
+
+[node name="GithubBtn" type="TextureButton" parent="Panel/HBoxContainer"]
+layout_mode = 2
+texture_normal = ExtResource("2_24sm1")
+
+[node name="E621Btn" type="TextureButton" parent="Panel/HBoxContainer"]
+layout_mode = 2
+texture_normal = ExtResource("3_ulxvo")
+
+[node name="FileDialog" type="FileDialog" parent="."]
+title = "Open a Directory"
+initial_position = 2
+size = Vector2i(514, 359)
+ok_button_text = "Select Current Folder"
+file_mode = 2
+access = 2
+
+[node name="LoadingPopup" parent="." instance=ExtResource("2_o4pna")]
+initial_position = 2
+
+[connection signal="meta_clicked" from="Panel/RichTextLabel" to="." method="_on_rich_text_label_meta_clicked"]
+[connection signal="pressed" from="Panel/VBoxContainer/HBoxContainer2/BrowseButton" to="." method="_on_browse_button_pressed"]
+[connection signal="pressed" from="Panel/VBoxContainer/SubmitButton" to="." method="_on_submit_button_pressed"]
+[connection signal="pressed" from="Panel/HBoxContainer/GithubBtn" to="." method="_on_github_btn_pressed"]
+[connection signal="pressed" from="Panel/HBoxContainer/E621Btn" to="." method="_on_e621_btn_pressed"]
+[connection signal="confirmed" from="FileDialog" to="." method="_on_file_dialog_confirmed"]
+[connection signal="dir_selected" from="FileDialog" to="." method="_on_file_dialog_dir_selected"]
+[connection signal="shouldCancel" from="LoadingPopup" to="." method="_on_loading_popup_should_cancel"]
