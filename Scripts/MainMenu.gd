@@ -1,3 +1,6 @@
+# Part of E621-Favorites-Downloader by LewdFerret
+# MIT License
+
 extends Control
 
 @onready var username_entry: LineEdit = $Panel/VBoxContainer/HBoxContainer/usernameEntry
@@ -11,10 +14,7 @@ var path: String = ""
 var api_key: String = ""
 var index: int = 0
 
-var favoritesData = {
-	"posts": [
-	]
-}
+var favoritesData = {}
 
 var ext: String = ""
 
@@ -143,20 +143,7 @@ func on_imgReq_completed(_result: int, res_code: int, _headers: PackedStringArra
 	
 	ext = favoritesData.get("posts")[index].get("file").get("ext")
 	
-	var fileName: String = "%s/e621-favorite-%s-%d" % [path, username, index]
-	
-	match ext:
-		"webp":
-			fileName = fileName + ".webp"
-		"png":
-			fileName = fileName + ".png"
-		"gif":
-			fileName = fileName + ".gif"
-		"webm":
-			fileName = fileName + ".webm"
-		_:
-			printerr("Unknown extension \".%s\"" % [ext])
-			return
+	var fileName: String = "%s/e621-favorite-%s-%d.%s" % [path, username, index, ext]
 	
 	var file = FileAccess.open(fileName, FileAccess.WRITE)
 	if(FileAccess.get_open_error() == OK):

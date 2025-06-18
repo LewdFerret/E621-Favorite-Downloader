@@ -11,8 +11,10 @@ config_version=5
 [application]
 
 config/name="E621 Favorites Downloader"
+config/description="E621 Favorites Downloader."
+config/version="0.0.2"
 run/main_scene="res://Scenes/MainMenu.tscn"
-config/features=PackedStringArray("4.2", "Forward Plus")
+config/features=PackedStringArray("4.4", "Forward Plus")
 config/icon="res://icon.svg"
 
 [display]

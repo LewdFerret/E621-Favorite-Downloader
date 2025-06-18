@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3 uid="uid://d8k5qge6h7lm"]
 
-[ext_resource type="Script" path="res://Scripts/MainMenu.gd" id="1_cm0cc"]
+[ext_resource type="Script" uid="uid://2hbn1vtgx0du" path="res://Scripts/MainMenu.gd" id="1_cm0cc"]
 [ext_resource type="Texture2D" uid="uid://bvweyc5dtpnsl" path="res://icons/github/github-mark-white.svg" id="2_24sm1"]
 [ext_resource type="PackedScene" uid="uid://d323hfn8372y5" path="res://Scenes/LoadingPopup.tscn" id="2_o4pna"]
 [ext_resource type="Texture2D" uid="uid://dh8m0rirvy4xs" path="res://icons/e621.png" id="3_ulxvo"]

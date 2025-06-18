@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://d323hfn8372y5"]
 
-[ext_resource type="Script" path="res://Scripts/LoadingPopup.gd" id="1_6yy7b"]
-[ext_resource type="Script" path="res://Scripts/Pivot.gd" id="1_k51k8"]
+[ext_resource type="Script" uid="uid://6uio6o87lr5p" path="res://Scripts/LoadingPopup.gd" id="1_6yy7b"]
+[ext_resource type="Script" uid="uid://b0nq5ic07e7xg" path="res://Scripts/Pivot.gd" id="1_k51k8"]
 [ext_resource type="Texture2D" uid="uid://8mcr3doel7l1" path="res://icons/loading.png" id="2_smygb"]
 
 [node name="LoadingPopup" type="Window"]
