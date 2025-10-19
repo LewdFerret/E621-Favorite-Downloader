@@ -16,6 +16,7 @@
 		"typescript": "^5.9.3"
 	},
 	"dependencies": {
+		"@re621/zestyapi": "^0.1.14",
 		"dotenv": "^17.2.3"
 	}
 }

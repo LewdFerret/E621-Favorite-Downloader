@@ -7,5 +7,10 @@
 		"esModuleInterop": true,
 		"resolveJsonModule": true,
 		"types": ["node"]
-	}
+	},
+  "include": ["src/**/*.ts"],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
 }
