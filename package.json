@@ -1,0 +1,21 @@
+{
+	"name": "e621-favs-downloader",
+	"version": "0.0.1",
+	"description": "Download your e621.net favorites.",
+	"license": "MIT",
+	"author": "LewdFerret",
+	"type": "module",
+	"main": "dist/main.js",
+	"scripts": {
+		"format": "npx prettier --write .",
+		"start": "node dist/main.js",
+		"build": "npx tsc"
+	},
+	"devDependencies": {
+		"@types/node": "^24.8.1",
+		"typescript": "^5.9.3"
+	},
+	"dependencies": {
+		"dotenv": "^17.2.3"
+	}
+}

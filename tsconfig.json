@@ -1,0 +1,11 @@
+{
+	"compilerOptions": {
+		"module": "NodeNext",
+		"allowArbitraryExtensions": true,
+		"rootDir": "src",
+		"outDir": "dist",
+		"esModuleInterop": true,
+		"resolveJsonModule": true,
+		"types": ["node"]
+	}
+}
