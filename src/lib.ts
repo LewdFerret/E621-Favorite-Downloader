@@ -98,7 +98,7 @@ export async function fetchFavorites(): Promise<void> {
   }
 }
 
-export async function downloadFile(url: string, filepath: string, parentBar: CliProgress.SingleBar): Promise<void> {
+export async function downloadFile(multibar: CliProgress.MultiBar, url: string, filepath: string, overallBar: CliProgress.SingleBar): Promise<void> {
   const start = Date.now();
 
   const res = await fetch(url, {
@@ -111,10 +111,14 @@ export async function downloadFile(url: string, filepath: string, parentBar: Cli
   let received = 0;
   const chunks = [];
 
-  const fileProgressBar = new CliProgress.SingleBar({
-    format: `[{bar}] {percentage}% | {value}/{total} bytes | ETA: {eta_formatted}`,
-  }, CliProgress.Presets.shades_classic);
-  fileProgressBar.start(totalBytes, 0);
+  const fileProgressBar = multibar.create(
+    totalBytes,
+    0,
+    { 
+      filename: filepath,
+      unit: 'bytes',
+    },
+  );
 
   while(true) {
     const { done, value } = await reader.read();
@@ -130,7 +134,7 @@ export async function downloadFile(url: string, filepath: string, parentBar: Cli
   const buffer = Buffer.concat(chunks);
   await writeFile(filepath, buffer);
 
-  parentBar.increment();
+  overallBar.increment();
 
   const elapsed = Date.now() - start;
   const remaining = 2000 - elapsed;
@@ -138,11 +142,16 @@ export async function downloadFile(url: string, filepath: string, parentBar: Cli
 }
 
 export async function downloadAllFiles(): Promise<void> {
-  const overallBar = new CliProgress.SingleBar({
-    format: `Overall [{bar}] {percentage}% | {value}/{total} files | ETA: {eta_formatted}`,
+  const multibar = new CliProgress.MultiBar({
+    format: '[{bar}] {percentage}% | {value}/{total} {unit} | {filename}',
+    clearOnComplete: false,
+    hideCursor: true,
   }, CliProgress.Presets.shades_classic);
-
-  overallBar.start(state.favCount, 0);
+  
+  const overallBar = multibar.create(state.favorites['posts'].length, 0, {
+    filename: 'Overall progress',
+    unit: 'files',
+  });
 
   for (let i: number = 0; i < state.favorites['posts'].length; i++) {
     const postId: number = state.favorites['posts'][i]['id'] || -1;
@@ -158,11 +167,12 @@ export async function downloadAllFiles(): Promise<void> {
       '';
 
     await downloadFile(
+      multibar,
       state.favorites['posts'][i]['file']['url'],
       `${CONFIG.outDir}/${postId}${ext}`,
       overallBar,
     );
   }
 
-  overallBar.stop();
+  multibar.stop();
 }
