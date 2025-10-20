@@ -12,11 +12,13 @@
 		"build": "npx tsc"
 	},
 	"devDependencies": {
+		"@types/cli-progress": "^3.11.6",
 		"@types/node": "^24.8.1",
 		"typescript": "^5.9.3"
 	},
 	"dependencies": {
 		"@re621/zestyapi": "^0.1.14",
+		"cli-progress": "^3.12.0",
 		"dotenv": "^17.2.3"
 	}
 }
