@@ -1,7 +1,7 @@
 import { config } from './config.js';
 import { exit } from 'node:process';
 import fs from 'node:fs';
-import CliProgress from 'cli-progress';
+import blessed from 'blessed';
 import { sleep, writeFile } from './common.js';
 
 // ============= constants ==============
@@ -20,6 +20,33 @@ let state: GlobalState = {
   favorites: {},
 }
 
+const screen = blessed.screen({
+  smartCSR: true,
+  title: 'E621 Favorites Downloader',
+});
+
+const box = blessed.box({
+  top: 0,
+  left: 0,
+  width: '100%',
+  height: '100%-1',
+  tags: true,
+  scrollable: true,
+  alwaysScroll: true,
+  keys: true,
+  vi: true,
+  scrollbar: { style: { bg: 'yellow' }},
+});
+
+const statusBar = blessed.box({
+  bottom: 0,
+  height: 1,
+  width: '100%',
+  style: { bg: 'blue' },
+  tags: true,
+  content: 'Press {white-fg}q{/white-fg} to quit',
+});
+
 // ========= private interfaces =========
 
 interface GlobalState {
@@ -36,6 +63,11 @@ export async function setupProgram(): Promise<void> {
       exit(1);
     }
   });
+
+  screen.append(box);
+  screen.append(statusBar);
+  screen.render();
+  screen.key(['q', 'C-c'], () => process.exit(0));
 }
 
 export async function fetchFavoriteCount(): Promise<void> {
@@ -98,7 +130,15 @@ export async function fetchFavorites(): Promise<void> {
   }
 }
 
-export async function downloadFile(multibar: CliProgress.MultiBar, url: string, filepath: string, overallBar: CliProgress.SingleBar): Promise<void> {
+function progressBar(current: number, total: number, width: number = 30): string {
+  const ratio = total ? current / total : 0;
+  const filled = Math.round(ratio * width);
+
+  return '[' + '█'.repeat(filled) +
+    ' '.repeat(width - filled) + `] ${(ratio * 100).toFixed(1)}%`;
+}
+
+export async function downloadFile(url: string, filepath: string, index: number): Promise<void> {
   const start = Date.now();
 
   const res = await fetch(url, {
@@ -111,30 +151,23 @@ export async function downloadFile(multibar: CliProgress.MultiBar, url: string, 
   let received = 0;
   const chunks = [];
 
-  const fileProgressBar = multibar.create(
-    totalBytes,
-    0,
-    { 
-      filename: filepath,
-      unit: 'bytes',
-    },
-  );
-
   while(true) {
     const { done, value } = await reader.read();
     if(done) break;
 
     chunks.push(value);
     received += value.length;
-    fileProgressBar.update(received);
-  }
 
-  fileProgressBar.stop();
+    const elapsed = Number(((Date.now() - start) / 1000).toFixed(1));
+    const bar = progressBar(received, totalBytes);
+    const speed = ((received / 1024) / (elapsed || 1)).toFixed(1);
+    box.setLine(index, `{bold}${filepath}{/bold} ${bar} ${speed} KB/s`);
+    box.scrollTo(index);
+    screen.render();
+  }
 
   const buffer = Buffer.concat(chunks);
   await writeFile(filepath, buffer);
-
-  overallBar.increment();
 
   const elapsed = Date.now() - start;
   const remaining = 2000 - elapsed;
@@ -142,23 +175,15 @@ export async function downloadFile(multibar: CliProgress.MultiBar, url: string, 
 }
 
 export async function downloadAllFiles(): Promise<void> {
-  const multibar = new CliProgress.MultiBar({
-    format: '[{bar}] {percentage}% | {value}/{total} {unit} | {filename}',
-    clearOnComplete: false,
-    hideCursor: true,
-  }, CliProgress.Presets.shades_classic);
-  
-  const overallBar = multibar.create(state.favorites['posts'].length, 0, {
-    filename: 'Overall progress',
-    unit: 'files',
-  });
+  const totalFiles = state.favorites['posts'].length;
+  let completed = 0;
 
-  for (let i: number = 0; i < state.favorites['posts'].length; i++) {
+  for (let i: number = 0; i < totalFiles; i++) {
     const postId: number = state.favorites['posts'][i]['id'] || -1;
 
     if (!state.favorites['posts'][i]['file']['url']) {
-      console.log(`\x1b[33m[WARN] URL for post ${postId} not found\x1b[0m`);
-      overallBar.update(i);
+      box.setLine(i, `{yellow-fg}URL for post ${postId} not found{/yellow-fg}`);
+      screen.render();
       continue;
     }
 
@@ -167,12 +192,17 @@ export async function downloadAllFiles(): Promise<void> {
       '';
 
     await downloadFile(
-      multibar,
       state.favorites['posts'][i]['file']['url'],
       `${CONFIG.outDir}/${postId}${ext}`,
-      overallBar,
+      i,
     );
+    completed++;
+
+    const overallBar = progressBar(completed, totalFiles);
+    statusBar.setContent(`Total ${overallBar} (${completed} / ${totalFiles}) | Press q to quit`);
+    screen.render();
   }
 
-  multibar.stop();
+  statusBar.setContent('{green-fg}✓ All downloads complete!{/green-fg} | Press q to quit');
+  screen.render();
 }
